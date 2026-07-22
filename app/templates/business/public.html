@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{# QR sahypasy – navbar we footer gizlenýär #}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="public-page">
+    <div class="public-container">
+        <!-- Cover -->
+        <div class="cover-wrapper">
+            {% if business.cover_image %}
+                <img src="{{ url_for('static', filename=business.cover_image) }}" class="cover-image" alt="Cover">
+            {% else %}
+                <div class="cover-placeholder">
+                    <span>{{ business.name }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Logo & Esasy maglumat -->
+        <div class="profile-section">
+            <div class="logo-wrapper">
+                {% if business.logo %}
+                    <img src="{{ url_for('static', filename=business.logo) }}" class="logo-image" alt="Logo">
+                {% else %}
+                    <div class="logo-placeholder">
+                        <span>{{ business.name[:2]|upper }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <h1 class="business-name">{{ business.name }}</h1>
+            <p class="business-category">{{ business.category }}</p>
+            <p class="business-description">{{ business.description }}</p>
+        </div>
+
+        <!-- Kontakt düwmeleri -->
+        <div class="action-buttons">
+            {% if business.phone %}
+                <a href="tel:{{ business.phone }}" class="btn-action btn-call">
+                    <i class="fas fa-phone"></i> Jaň et
+                </a>
+            {% endif %}
+            {% if business.whatsapp %}
+                <a href="https://wa.me/{{ business.whatsapp }}" target="_blank" class="btn-action btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            {% endif %}
+            {% if business.maps_link %}
+                <a href="{{ business.maps_link }}" target="_blank" class="btn-action btn-location">
+                    <i class="fas fa-map-marker-alt"></i> Ýerleşiş
+                </a>
+            {% endif %}
+            {% if business.instagram %}
+                <a href="https://instagram.com/{{ business.instagram }}" target="_blank" class="btn-action btn-instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            {% endif %}
+            {% if business.tiktok %}
+                <a href="https://tiktok.com/@{{ business.tiktok }}" target="_blank" class="btn-action btn-tiktok">
+                    <i class="fab fa-tiktok"></i> TikTok
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Iş wagty -->
+        {% if business.opening_time and business.closing_time %}
+            <div class="working-hours">
+                <i class="far fa-clock"></i>
+                <span>{{ business.opening_time }} – {{ business.closing_time }}</span>
+            </div>
+        {% endif %}
+
+        <!-- Katalog -->
+        {% if products %}
+            <div class="catalog-section">
+                <h3 class="catalog-title">Katalog</h3>
+                <div class="product-grid">
+                    {% for product in products %}
+                        <div class="product-card">
+                            {% if product.image %}
+                                <img src="{{ url_for('static', filename=product.image) }}" 
+                                     class="product-image" 
+                                     alt="{{ product.name }}"
+                                     data-image="{{ url_for('static', filename=product.image) }}"
+                                     style="cursor: pointer;">
+                            {% else %}
+                                <div class="product-image-placeholder">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                            {% endif %}
+                            <div class="product-info">
+                                <h4>{{ product.name }}</h4>
+                                <span class="product-price">{{ product.price }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Görüş sany -->
+        <div class="view-counter">
+            <i class="fas fa-eye"></i> {{ business.views }} görüş
+        </div>
+
+        <!-- TMCard baglanyşygy -->
+        <div class="public-footer">
+            <a href="{{ url_for('public.index') }}" class="tmcard-link">TMCard</a>
+        </div>
+    </div>
+</div>
+
+<!-- Surat görkezýän modal (Lightbox) -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body p-0 text-center position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" style="z-index: 1050;"></button>
+                <img id="modalImage" src="" class="img-fluid rounded" style="max-height: 90vh; width: auto; margin: 0 auto;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Surata basylanda modaly açmak üçin
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.product-image');
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        const modalImg = document.getElementById('modalImage');
+
+        images.forEach(function(img) {
+            img.addEventListener('click', function() {
+                const src = this.getAttribute('data-image');
+                modalImg.src = src;
+                modal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}

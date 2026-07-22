@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero – ramka ýok, diňe tekst we düwme -->
+<section class="hero">
+    <div class="container">
+        <h1>Biznesiňiziň sanly <br>vizitka kartoçkasy</h1>
+        <p>Bir QR kod bilen müşderileriňize ähli maglumatlary hödürläň.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-hero">Başla</a>
+    </div>
+</section>
+
+<!-- Maksat -->
+<section class="section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2>Näme üçin TMCard?</h2>
+                <p class="text-muted fs-5">
+                    Kiçi we orta biznesler üçin ýönekeý, arzan we täsirli sanly çözgüt.
+                    Müşderiler sizi bir basyşda tapar.
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-2"><i class="fas fa-check-circle text-accent me-2"></i> QR kod bilen bir basyşda elýeterli</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-accent me-2"></i> Katalog, kontakt, sosial media bir ýerde</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-accent me-2"></i> Müşderiler hemişe ýatda saklar</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="visit-card">TMCard</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Üç ädim -->
+<section class="section bg-light">
+    <div class="container">
+        <h2 class="text-center">Üç ädimde başlaň</h2>
+        <div class="steps">
+            <div class="step">
+                <span class="num">1</span>
+                <h5>Hasap dörediň</h5>
+                <p>1 minutda hasap alyň</p>
+            </div>
+            <div class="step">
+                <span class="num">2</span>
+                <h5>Profil dolduryň</h5>
+                <p>Logo, kontakt, katalog</p>
+            </div>
+            <div class="step">
+                <span class="num">3</span>
+                <h5>QR paýlaşyň</h5>
+                <p>Çap ediň ýa-da iberiň</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Kimler üçin? -->
+<section class="section">
+    <div class="container">
+        <h2 class="text-center">Kimler üçin?</h2>
+        <p class="text-center text-muted" style="max-width:600px;margin:0 auto 2rem;">
+            TMCard, müşderileri bilen aragatnaşygy gowulandyrmak isleýän islendik biznes üçin işleýär.
+        </p>
+        <div class="grid">
+            <div class="card">
+                <span class="icon">🍽️</span>
+                <h5>Restoran &amp; Kafe</h5>
+                <p>Menýu, iş wagty, telefon we WhatsApp</p>
+            </div>
+            <div class="card">
+                <span class="icon">🛍️</span>
+                <h5>Magazin &amp; Bazar</h5>
+                <p>Haryt katalog, bahalar we ýerleşiş</p>
+            </div>
+            <div class="card">
+                <span class="icon">💆</span>
+                <h5>Gözellik salonlary</h5>
+                <p>Hyzmatlar, ussalaryňyz we iş wagty</p>
+            </div>
+            <div class="card">
+                <span class="icon">🔧</span>
+                <h5>Hyzmat pudagy</h5>
+                <p>Bejeriş, göçüriş, abatlaýyş</p>
+            </div>
+            <div class="card">
+                <span class="icon">🏋️</span>
+                <h5>Sport &amp; Medeniýet</h5>
+                <p>Fitnes, sport mekdebi, muzeý</p>
+            </div>
+            <div class="card">
+                <span class="icon">👤</span>
+                <h5>Şahsy kärhana</h5>
+                <p>Freelancer, fotoçy, psiholog</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Netije – ak fon -->
+<section class="section">
+    <div class="container text-center">
+        <h2 class="fw-bold">Müşderileriňiz sizi unutmaz</h2>
+        <p style="max-width:600px;margin:1rem auto; font-size: 1.1rem; color: #475569;">
+            Bir QR kod bilen müşderiler size 7/24 girip biler.
+            <br><strong>Markaňyzyň sanly ýüzüni dörediň.</strong>
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-accent btn-lg">Başla</a>
+    </div>
+</section>
+{% endblock %}

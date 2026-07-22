@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Biznes profili dörediň</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.category.label(class="form-label") }}
+                    {{ form.category(class="form-select") }}
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", rows=3) }}
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.phone.label(class="form-label") }}
+                    {{ form.phone(class="form-control") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.whatsapp.label(class="form-label") }}
+                    {{ form.whatsapp(class="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.instagram.label(class="form-label") }}
+                {{ form.instagram(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                {{ form.tiktok.label(class="form-label") }}
+                {{ form.tiktok(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                {{ form.telegram.label(class="form-label") }}
+                {{ form.telegram(class="form-control") }}
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form.address.label(class="form-label") }}
+            {{ form.address(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.maps_link.label(class="form-label") }}
+            {{ form.maps_link(class="form-control") }}
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.opening_time.label(class="form-label") }}
+                {{ form.opening_time(class="form-control", type="time") }}
+            </div>
+            <div class="col-md-6">
+                {{ form.closing_time.label(class="form-label") }}
+                {{ form.closing_time(class="form-control", type="time") }}
+            </div>
+        </div>
+        <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-accent">Döret</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

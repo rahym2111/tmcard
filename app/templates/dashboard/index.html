@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="container-fluid px-4 py-4">
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-0">Dashboard</h4>
+                <p class="text-muted small">Hos geldiňiz, {{ current_user.name }}!</p>
+            </div>
+            <div>
+                <a href="{{ url_for('business.edit', id=business.id) }}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="fas fa-edit"></i> Profil redaktirle
+                </a>
+                <a href="{{ url_for('business.public', slug=business.slug) }}" target="_blank" class="btn btn-accent btn-sm">
+                    <i class="fas fa-eye"></i> Görmek
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistika -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary"><i class="fas fa-eye"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">{{ views }}</span>
+                        <span class="stat-label">Görüşler</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-success"><i class="fas fa-box"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">{{ products|length }}</span>
+                        <span class="stat-label">Harytlar</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning"><i class="fas fa-qrcode"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">QR kod</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-info"><i class="fas fa-link"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number"><a href="{{ url_for('business.public', slug=business.slug) }}" target="_blank" class="text-dark text-decoration-none">Aç</a></span>
+                        <span class="stat-label">Profil link</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Iki sütün -->
+        <div class="row g-4">
+            <!-- Çep: QR, logo, cover -->
+            <div class="col-lg-4">
+                <!-- QR -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header"><i class="fas fa-qrcode me-2"></i> QR kod</div>
+                    <div class="card-body text-center">
+                        <img src="data:image/png;base64,{{ qr_data }}" class="img-fluid qr-image" alt="QR kod">
+                        <div class="mt-3">
+                            <a href="data:image/png;base64,{{ qr_data }}" download="qr.png" class="btn btn-accent btn-sm"><i class="fas fa-download"></i> PNG ýükle</a>
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#qrModal"><i class="fas fa-expand"></i> Uly gör</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo ýükle -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header"><i class="fas fa-image me-2"></i> Logo</div>
+                    <div class="card-body text-center">
+                        {% if business.logo %}
+                            <img src="{{ url_for('static', filename=business.logo) }}" class="logo-preview mb-3" alt="Logo">
+                        {% else %}
+                            <div class="empty-logo mb-3"><i class="fas fa-camera"></i><span>Logo ýok</span></div>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('dashboard.upload_logo') }}" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <input type="file" name="logo" accept="image/*" class="form-control form-control-sm" required>
+                                <button type="submit" class="btn btn-accent btn-sm">Ýükle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cover ýükle -->
+                <div class="card dashboard-card">
+                    <div class="card-header"><i class="fas fa-cover me-2"></i> Cover surat</div>
+                    <div class="card-body text-center">
+                        {% if business.cover_image %}
+                            <img src="{{ url_for('static', filename=business.cover_image) }}" class="cover-preview mb-3" alt="Cover">
+                        {% else %}
+                            <div class="empty-cover mb-3"><i class="fas fa-camera"></i><span>Cover ýok</span></div>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('dashboard.upload_cover') }}" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <input type="file" name="cover" accept="image/*" class="form-control form-control-sm" required>
+                                <button type="submit" class="btn btn-accent btn-sm">Ýükle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sag: Harytlar -->
+            <div class="col-lg-8">
+                <div class="card dashboard-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-box me-2"></i> Soňky goşulan harytlar</span>
+                        <a href="{{ url_for('dashboard.manage_products') }}" class="btn btn-accent btn-sm"><i class="fas fa-plus"></i> Täze haryt</a>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if products %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr><th>Surat</th><th>Ady</th><th>Bahasy</th><th class="text-end">Amallar</th></tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in products %}
+                                    <tr>
+                                        <td>
+                                            {% if product.image %}
+                                                <img src="{{ url_for('static', filename=product.image) }}" class="product-thumb" alt="{{ product.name }}">
+                                            {% else %}
+                                                <span class="product-thumb empty">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><strong>{{ product.name }}</strong></td>
+                                        <td><span class="badge bg-accent">{{ product.price }}</span></td>
+                                        <td class="text-end">
+                                            <!-- Redaktirle düwmesi -->
+                                            <button type="button" class="btn btn-sm btn-outline-primary me-1 edit-product-btn" data-product-id="{{ product.id }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <!-- Öçür -->
+                                            <form method="POST" action="{{ url_for('dashboard.delete_product', id=product.id) }}" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Öçürmek isleýäňizmi?')"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Häzirlikçe haryt ýok.</p>
+                            <a href="{{ url_for('dashboard.manage_products') }}" class="btn btn-accent btn-sm">Ilkinji harydy goş</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- QR modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">QR kod</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body text-center">
+                <img src="data:image/png;base64,{{ qr_data }}" class="img-fluid" style="max-width:250px;">
+                <div class="mt-3"><a href="data:image/png;base64,{{ qr_data }}" download="qr.png" class="btn btn-accent btn-sm">PNG ýükle</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Redaktirle modal (tablisanyň daşynda) – her haryt üçin -->
+{% for product in products %}
+<div class="modal fade" id="editProductModal{{ product.id }}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Harydy redaktirle: {{ product.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('dashboard.update_product', id=product.id) }}" enctype="multipart/form-data">
+                {{ csrf_token() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Harydyň ady</label>
+                        <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bahasy</label>
+                        <input type="text" name="price" class="form-control" value="{{ product.price }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Surat</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        {% if product.image %}
+                            <small class="text-muted">Häzirki: {{ product.image.split('/')[-1] }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ýap</button>
+                    <button type="submit" class="btn btn-accent">Sakla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var editButtons = document.querySelectorAll('.edit-product-btn');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productId = this.getAttribute('data-product-id');
+            var modalElement = document.getElementById('editProductModal' + productId);
+            if (modalElement) {
+                var myModal = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                myModal.show();
+            } else {
+                console.error('Modal tapylmady: editProductModal' + productId);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
