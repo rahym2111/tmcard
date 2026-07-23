@@ -6,10 +6,11 @@ from app.config import Config
 from app.extensions import db, login_manager, csrf
 
 def create_app():
+    # instance_relative_config parametrini aýyrdyk!
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Render serwerinde upload papkalaryny awtomatiki döretmek
+    # Database we Upload papkalarynyň varlygyny üpjün etmek
     for folder in [Config.UPLOAD_FOLDER, Config.LOGO_FOLDER, Config.COVER_FOLDER, Config.PRODUCT_FOLDER]:
         os.makedirs(folder, exist_ok=True)
 
@@ -42,7 +43,6 @@ def create_app():
     def inject_csrf_token():
         return dict(csrf_token=lambda: generate_csrf())
 
-    # App kontekstinde Baza tablisalaryny döretmek
     with app.app_context():
         db.create_all()
 
