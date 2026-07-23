@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_login import current_user
 from flask_wtf.csrf import generate_csrf
@@ -8,6 +9,12 @@ from app.models import User, Business, Product
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(Config)
+
+    # 1. Instance papkasynyň bar bolmagyny üpjün etmek (SQLite ýalňyşlygyny çözýär)
+    try:
+        os.makedirs(app.instance_path, exist_ok=True)
+    except OSError:
+        pass
 
     db.init_app(app)
     login_manager.init_app(app)
