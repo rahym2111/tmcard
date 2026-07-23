@@ -6,16 +6,11 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     
-    # Taslamanyň kök papkasy
+    # Taslamanyň esasy kök papkasy (Root directory: /opt/render/project/src)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
-    # Instance papkasynyň absolute ýoly
-    INSTANCE_PATH = os.path.join(BASE_DIR, 'instance')
-    
-    # Database faýlynyň doly ýoly
-    DB_PATH = os.path.join(INSTANCE_PATH, 'tmcard.db')
-    
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{DB_PATH}'
+    # Bazany göni kök papkada 'tmcard.db' ady bilen saklaýarys (DATABASE_URL-e seretmeýäris)
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(BASE_DIR, "tmcard.db")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Upload papkalary
