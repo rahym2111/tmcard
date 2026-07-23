@@ -6,13 +6,11 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     
-    # Taslamanyň kök (root) papkasy
+    # BASE_DIR - taslamaňyzyň kök papkasy
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
-    # Database ýoluny absolute (doly) ýol hökmünde bellemek
+    # Bazany göni kök papkada 'tmcard.db' hökmünde ýerleşdirýäris
     DB_PATH = os.path.join(BASE_DIR, 'tmcard.db')
-    
-    # Linux/Render üçin absolute SQLite URL (4 slash bilen)
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{DB_PATH}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
