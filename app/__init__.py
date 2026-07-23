@@ -6,13 +6,10 @@ from app.config import Config
 from app.extensions import db, login_manager, csrf
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     app.config.from_object(Config)
 
-    # 1. 'instance' papkasyny awtomatiki döretmek (SQLite bazasy üçin kepillik)
-    os.makedirs(app.instance_path, exist_ok=True)
-
-    # 2. Upload papkalaryny hem döretmek
+    # Static/uploads papkalaryny hem döretmek
     for folder in [Config.UPLOAD_FOLDER, Config.LOGO_FOLDER, Config.COVER_FOLDER, Config.PRODUCT_FOLDER]:
         os.makedirs(folder, exist_ok=True)
 
@@ -45,7 +42,6 @@ def create_app():
     def inject_csrf_token():
         return dict(csrf_token=lambda: generate_csrf())
 
-    # 3. Papka bar bolanyndan soň baza faýly awtomatiki dörär!
     with app.app_context():
         db.create_all()
 
