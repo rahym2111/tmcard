@@ -7,9 +7,11 @@ class Config:
     # Tuplyk açary
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     
-    # SQLite bazasynyň absolute ýoly (Windows üçin dogrulan)
+    # SQLite bazasynyň absolute ýoly (Render we Windows üçin laýyklandyryldy)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    DB_PATH = os.path.join(BASE_DIR, 'instance', 'tmcard.db')
+    
+    # DB-ni 'instance' papkasyna däl-de, göni BASE_DIR (kök papka) içine goýýarys
+    DB_PATH = os.path.join(BASE_DIR, 'tmcard.db')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', f'sqlite:///{DB_PATH.replace(os.sep, "/")}')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
