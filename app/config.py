@@ -4,23 +4,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # Tuplyk açary
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     
-    # SQLite bazasynyň absolute ýoly (Render we Windows üçin laýyklandyryldy)
+    # Taslamanyň kök (root) papkasy
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
-    # DB-ni 'instance' papkasyna däl-de, göni BASE_DIR (kök papka) içine goýýarys
+    # Database ýoluny absolute (doly) ýol hökmünde bellemek
     DB_PATH = os.path.join(BASE_DIR, 'tmcard.db')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', f'sqlite:///{DB_PATH.replace(os.sep, "/")}')
+    
+    # Linux/Render üçin absolute SQLite URL (4 slash bilen)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{DB_PATH}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    # Faýl ýükleme sazlamalary
-    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'app/static/uploads')
+    # Upload papkalary
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app', 'static', 'uploads')
     MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))
     LOGO_FOLDER = os.path.join(UPLOAD_FOLDER, 'logos')
     COVER_FOLDER = os.path.join(UPLOAD_FOLDER, 'covers')
     PRODUCT_FOLDER = os.path.join(UPLOAD_FOLDER, 'products')
     
-    # Admin hökmünde saýlanan ulanyjynyň ID-si (ilkinji hasap)
     ADMIN_ID = 1
