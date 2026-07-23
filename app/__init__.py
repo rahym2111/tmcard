@@ -4,17 +4,14 @@ from flask_login import current_user
 from flask_wtf.csrf import generate_csrf
 from app.config import Config
 from app.extensions import db, login_manager, csrf
-from app.models import User, Business, Product
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     app.config.from_object(Config)
 
-    # 1. Instance papkasynyň bar bolmagyny üpjün etmek (SQLite ýalňyşlygyny çözýär)
-    try:
-        os.makedirs(app.instance_path, exist_ok=True)
-    except OSError:
-        pass
+    # Render serwerinde upload papkalaryny awtomatiki döretmek
+    for folder in [Config.UPLOAD_FOLDER, Config.LOGO_FOLDER, Config.COVER_FOLDER, Config.PRODUCT_FOLDER]:
+        os.makedirs(folder, exist_ok=True)
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -22,6 +19,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
+        from app.models import User
         return User.query.get(int(user_id))
 
     from app.auth.routes import auth_bp
@@ -36,16 +34,15 @@ def create_app():
     app.register_blueprint(public_bp)
     app.register_blueprint(admin_bp)
 
-    # Admin kontrol
     @app.context_processor
     def inject_admin():
         return dict(is_admin=lambda: current_user.is_authenticated and current_user.id == Config.ADMIN_ID)
 
-    # CSRF token generirleýji (şablonlarda {{ csrf_token() }} işleýär)
     @app.context_processor
     def inject_csrf_token():
         return dict(csrf_token=lambda: generate_csrf())
 
+    # App kontekstinde Baza tablisalaryny döretmek
     with app.app_context():
         db.create_all()
 
